@@ -4,6 +4,7 @@ from datetime import datetime
 import torch
 from spellchecker import SpellChecker
 from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
+import gc
 
 app = Flask(__name__)
 
@@ -28,17 +29,53 @@ def db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# ================= LOAD MODELS =================
+# ================= LAZY LOAD MODELS =================
+# Store models in a cache that loads on first use
+_model_cache = {}
 
-emotion_classifier = pipeline(
-    "text-classification",
-    model="j-hartmann/emotion-english-distilroberta-base",
-    top_k=1
-)
+def get_emotion_classifier():
+    """Lazy load emotion classifier"""
+    if 'emotion' not in _model_cache:
+        # Use smaller model and CPU optimizations
+        _model_cache['emotion'] = pipeline(
+            "text-classification",
+            model="j-hartmann/emotion-english-distilroberta-base",
+            top_k=1,
+            device=-1,  # Force CPU
+            framework="pt",
+            model_kwargs={"low_cpu_mem_usage": True}
+        )
+    return _model_cache['emotion']
 
-tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
-seq2seq_model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+def get_seq2seq_model():
+    """Lazy load seq2seq model with memory optimizations"""
+    if 'seq2seq' not in _model_cache:
+        # Load with memory optimizations
+        tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base", use_fast=True)
+        model = AutoModelForSeq2SeqLM.from_pretrained(
+            "google/flan-t5-base",
+            low_cpu_mem_usage=True,
+            torch_dtype=torch.float32  # Use float32 explicitly
+        )
+        model.eval()  # Set to evaluation mode
+        _model_cache['seq2seq_tokenizer'] = tokenizer
+        _model_cache['seq2seq_model'] = model
+    
+    return _model_cache['seq2seq_tokenizer'], _model_cache['seq2seq_model']
 
+def clear_model_cache():
+    """Clear model cache to free memory"""
+    global _model_cache
+    for model in _model_cache.values():
+        if hasattr(model, 'to'):
+            model.to('cpu')
+        del model
+    _model_cache = {}
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
+# Initialize spell checker (lightweight)
 spell = SpellChecker()
 
 # ================= HOME =================
@@ -57,7 +94,7 @@ def add_mood():
     if not raw_note:
         return jsonify({"error": "Empty entry"}), 400
 
-    # Normalize + Spell correction
+    # Normalize + Spell correction (lightweight operation)
     note = raw_note.lower()
     corrected = []
     for word in note.split():
@@ -65,7 +102,8 @@ def add_mood():
         corrected.append(fixed if fixed else word)
     corrected_note = " ".join(corrected)
 
-    # Emotion detection
+    # Emotion detection - load model only when needed
+    emotion_classifier = get_emotion_classifier()
     prediction = emotion_classifier(corrected_note)[0][0]
     detected_mood = prediction["label"]
 
@@ -97,7 +135,6 @@ def get_moods():
 
 @app.route("/monthly_comparison")
 def monthly_comparison():
-
     conn = db_connection()
     moods = conn.execute("SELECT mood FROM moods ORDER BY date ASC").fetchall()
     conn.close()
@@ -133,7 +170,6 @@ def monthly_comparison():
 
 @app.route("/ai_suggestion")
 def ai_suggestion():
-
     conn = db_connection()
     latest = conn.execute(
         "SELECT mood, note FROM moods ORDER BY id DESC LIMIT 1"
@@ -161,15 +197,19 @@ def ai_suggestion():
     Keep response under 70 words.
     """
 
-    inputs = tokenizer(prompt, return_tensors="pt", truncation=True)
+    # Load models only for this request
+    tokenizer, model = get_seq2seq_model()
+    
+    inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=256)
 
     with torch.no_grad():
-        outputs = seq2seq_model.generate(
+        outputs = model.generate(
             **inputs,
             max_new_tokens=90,
             temperature=0.8,
             do_sample=True,
-            repetition_penalty=1.2
+            repetition_penalty=1.2,
+            num_beams=1  # Use greedy search instead of beam search
         )
 
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)
@@ -183,7 +223,6 @@ def ai_suggestion():
 
 @app.route("/reflection_prompt")
 def reflection_prompt():
-
     conn = db_connection()
     latest = conn.execute(
         "SELECT note FROM moods ORDER BY id DESC LIMIT 1"
@@ -202,21 +241,40 @@ def reflection_prompt():
     Generate one thoughtful self-reflection question.
     """
 
-    inputs = tokenizer(prompt, return_tensors="pt", truncation=True)
+    # Load models only for this request
+    tokenizer, model = get_seq2seq_model()
+    
+    inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=256)
 
     with torch.no_grad():
-        outputs = seq2seq_model.generate(
+        outputs = model.generate(
             **inputs,
             max_new_tokens=60,
             temperature=0.7,
-            do_sample=True
+            do_sample=True,
+            num_beams=1  # Use greedy search
         )
 
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     return jsonify({"prompt": result})
 
+# ================= CLEANUP =================
+
+@app.teardown_appcontext
+def cleanup(error):
+    """Clear model cache periodically to free memory"""
+    # Uncomment if you want to clear cache after each request (slower but less memory)
+    # clear_model_cache()
+    pass
+
+# Optional: Add endpoint to manually clear cache
+@app.route("/clear_cache", methods=["POST"])
+def manual_clear_cache():
+    clear_model_cache()
+    return jsonify({"status": "Cache cleared"})
+
 # ================= RUN =================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, threaded=False)  # Disable threading for less memory overhead
