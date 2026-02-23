@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calm Journal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #eaf6f3, #fdf6f0);
+    transition: all 0.4s ease;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.navbar h2 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #7bbfae, #6aa997);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.container {
+    width: 80%;
+    margin: 60px auto;
+}
+
+/* ================= TEXTAREA ================= */
+
+textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 20px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    font-family: inherit;
+    transition: 0.3s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #7bbfae;
+    box-shadow: 0 0 0 3px rgba(123,191,174,0.2);
+}
+
+/* ================= CARDS ================= */
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 25px;
+    margin-top: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.05);
+    transition: 0.3s ease;
+    white-space: pre-line;
+}
+#aiBox {
+    border-left: 4px solid #7bbfae;
+}
+.dark-mode #aiBox {
+    border-left: 4px solid #6aa997;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+/* ================= DARK MODE ================= */
+
+.dark-mode {
+    background: radial-gradient(circle at top left, #1f2a2a, #111616);
+    color: #e4f0ed;
+}
+
+.dark-mode .navbar {
+    background: rgba(25,35,35,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.dark-mode button {
+    background: linear-gradient(135deg, #6aa997, #4f8a7c);
+}
+
+.dark-mode textarea {
+    background: #1f2a2a;
+    border: 1px solid #2e3c3c;
+    color: #e4f0ed;
+}
+
+.dark-mode textarea:focus {
+    box-shadow: 0 0 0 3px rgba(106,169,151,0.3);
+}
+
+.dark-mode .card {
+    background: linear-gradient(145deg, #1c2626, #162020);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.dark-mode h1,
+.dark-mode h2 {
+    color: #e4f0ed;
+}
+
+#analysis-section {
+    display: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>🌿 Calm Journal</h2>
+    <div>
+        <button onclick="showDashboard()">Dashboard</button>
+        <button onclick="showAnalysis()">Analysis</button>
+        <button id="themeToggle">🌙</button>
+    </div>
+</div>
+
+<div class="container">
+
+<div id="dashboard-section">
+<h1>How are you feeling?</h1>
+<textarea id="note"></textarea>
+<br><br>
+<button onclick="saveMood()">Save</button>
+
+<h2>🤖 AI Insight</h2>
+<div id="aiBox" class="card"></div>
+
+<h2>🪞 Reflection</h2>
+<div id="reflectionBox" class="card"></div>
+</div>
+
+<div id="analysis-section">
+<h1>📊 Analysis</h1>
+
+<h2>Monthly Comparison</h2>
+<div id="monthlyComparison" class="card"></div>
+
+<h2>Mood Distribution</h2>
+<canvas id="moodChart"></canvas>
+
+<h2>Mood Trend</h2>
+<canvas id="trendChart"></canvas>
+
+<h2>Calendar</h2>
+<div id="calendar"></div>
+
+</div>
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>

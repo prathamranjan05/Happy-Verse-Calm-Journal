@@ -1,0 +1,143 @@
+:root {
+    --primary: #7bbfae;
+    --primary-soft: #cfe8e1;
+    --accent: #f5d6c6;
+
+    --bg-light: #f4f9f8;
+    --card-light: #ffffff;
+
+    --bg-dark: #1b1f1f;
+    --card-dark: #262b2b;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #eaf6f3, #fdf6f0);
+    color: #333;
+    transition: 0.5s ease;
+}
+
+/* NAVBAR */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #e6f0ee;
+}
+
+.navbar h2 {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* BUTTONS */
+
+button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-weight: 500;
+}
+
+button:hover {
+    background: #6aa997;
+}
+
+/* LAYOUT */
+
+.container {
+    width: 85%;
+    margin: 60px auto;
+}
+
+h1, h2, h3 {
+    font-weight: 500;
+    margin-top: 30px;
+}
+
+/* INPUTS */
+
+select, textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 20px;
+    border: 1px solid #dce8e5;
+    margin: 15px 0;
+    font-family: inherit;
+    transition: 0.3s ease;
+}
+
+select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* CARDS */
+
+#aiBox, #weeklyBox, .stat-card {
+    background: var(--card-light);
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    transition: 0.4s ease;
+}
+
+/* Monthly comparison soft border */
+
+.stat-card {
+    border-left: 6px solid var(--primary);
+}
+
+.stat-card.positive {
+    border-left: 6px solid #7bbfae;
+}
+
+.stat-card.negative {
+    border-left: 6px solid #e7a7a7;
+}
+
+/* Charts spacing */
+
+canvas {
+    margin: 50px 0;
+}
+
+/* Calendar */
+
+#calendar {
+    margin: 40px 0;
+}
+
+/* DARK MODE (Soft version) */
+
+.dark-mode {
+    background: var(--bg-dark);
+    color: #e4f0ed;
+}
+
+.dark-mode .navbar {
+    background: rgba(38,43,43,0.8);
+}
+
+.dark-mode select,
+.dark-mode textarea {
+    background: #2e3333;
+    color: #e4f0ed;
+    border: 1px solid #444;
+}
+
+.dark-mode #aiBox,
+.dark-mode #weeklyBox,
+.dark-mode .stat-card {
+    background: var(--card-dark);
+}
