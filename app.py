@@ -4,8 +4,12 @@ import random
 import re
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
+from spellchecker import SpellChecker
 
 app = Flask(__name__)
+
+# ================= SPELL CHECKER =================
+spell = SpellChecker()
 
 # ================= DATABASE =================
 DB_PATH = '/tmp/moods.db' if os.environ.get('RENDER') else 'moods.db'
@@ -38,6 +42,20 @@ def db_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
+
+# ================= SPELL CHECK FUNCTION =================
+def correct_spelling(text):
+    """Correct spelling in the given text"""
+    words = text.split()
+    corrected_words = []
+    
+    for word in words:
+        # Get correction (returns None if word is misspelled)
+        correction = spell.correction(word)
+        # Use correction if available, otherwise keep original
+        corrected_words.append(correction if correction else word)
+    
+    return " ".join(corrected_words)
 
 # ================= MOOD DETECTION =================
 def detect_mood(text):
@@ -177,7 +195,7 @@ def extract_keywords(text, max_words=3):
                   'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has',
                   'had', 'having', 'do', 'does', 'did', 'doing', 'would', 'could', 'should',
                   'might', 'must', 'im', 'ive', 'id', 'youre', 'youve', 'youll', 'youd',
-                  'hes', 'hes', 'hES', 'hES', 'shes', 'sHE', 'its', 'were', 'theyre',
+                  'hes', 'hes', 'hES', 'hES', 'shes', 'she', 'its', 'were', 'theyre',
                   'theyve', 'theyll', 'theyd'}
     
     words = text.split()
@@ -212,20 +230,25 @@ def add_mood():
     if not note:
         return jsonify({"error": "Empty entry"}), 400
     
-    mood, confidence = detect_mood(note)
+    # Spell check the note
+    corrected_note = correct_spelling(note)
+    
+    # Detect mood from corrected note
+    mood, confidence = detect_mood(corrected_note.lower())
     date = datetime.now().strftime("%Y-%m-%d")
     
     conn = db_connection()
     conn.execute(
         "INSERT INTO moods (mood, note, date) VALUES (?, ?, ?)",
-        (mood, note, date)
+        (mood, corrected_note, date)  # Store the corrected version
     )
     conn.commit()
     conn.close()
     
     return jsonify({
         "mood": mood,
-        "confidence": round(confidence, 2)
+        "confidence": round(confidence, 2),
+        "corrected": corrected_note != note  # Optional: let frontend know if corrections were made
     })
 
 @app.route("/get_moods")
