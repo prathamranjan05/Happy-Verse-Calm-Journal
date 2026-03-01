@@ -389,7 +389,6 @@ def cleanup(error):
     """Optional cleanup after each request"""
     # Only clear on Render when memory is tight
     if IS_RENDER and app.request_counter % 5 == 0:
-        import psutil
         memory_percent = psutil.virtual_memory().percent
         if memory_percent > 80:  # If memory usage > 80%
             clear_model_cache()
