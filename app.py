@@ -7,7 +7,7 @@ from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from spellchecker import SpellChecker
 import torch
-
+import psutil
 # ================= RENDER CONFIG =================
 # Check if running on Render
 IS_RENDER = os.environ.get('RENDER', False)
@@ -143,7 +143,7 @@ def health():
 
 def get_memory_usage():
     """Get current memory usage"""
-    import psutil
+
     process = psutil.Process()
     memory_info = process.memory_info()
     return {
