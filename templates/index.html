@@ -16,46 +16,101 @@ body {
     transition: all 0.4s ease;
 }
 
-/* ================= NAVBAR ================= */
-
-.navbar {
+/* ===== MAIN HEADER - Clickable Home Button ===== */
+.main-header {
+    height: 60px;
+    background: #2c3e50;
+    color: white;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 18px 50px;
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
-.navbar h2 {
+.main-header:hover {
+    background: #34495e;
+}
+
+.main-header span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-header span::after {
+    content: '🏠';
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.main-header:hover span::after {
+    opacity: 1;
+}
+
+/* Tooltip on hover */
+.main-header::before {
+    content: 'Go to Home';
+    position: absolute;
+    bottom: -30px;
+    left: 30px;
+    background: #2c3e50;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.main-header:hover::before {
+    opacity: 1;
+}
+
+/* ===== CALM JOURNAL SUBTITLE ===== */
+.subtitle {
+    text-align: center;
+    font-size: 1.8rem;
     font-weight: 600;
+    color: #2c3e50;
+    margin: 30px 0 10px 0;
     letter-spacing: 0.5px;
 }
 
-button {
-    padding: 8px 18px;
-    border: none;
-    border-radius: 25px;
+.subtitle span {
     background: linear-gradient(135deg, #7bbfae, #6aa997);
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.3s ease;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+/* Dark mode subtitle */
+.dark-mode .subtitle {
+    color: #e4f0ed;
 }
 
+.dark-mode .subtitle span {
+    background: linear-gradient(135deg, #a8e6cf, #7bbfae);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== CONTAINER ===== */
 .container {
-    width: 80%;
-    margin: 60px auto;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px 20px;
 }
 
-/* ================= TEXTAREA ================= */
-
+/* ===== TEXTAREA ===== */
 textarea {
     width: 100%;
     min-height: 140px;
@@ -65,6 +120,7 @@ textarea {
     font-size: 16px;
     font-family: inherit;
     transition: 0.3s ease;
+    box-sizing: border-box;
 }
 
 textarea:focus {
@@ -73,8 +129,32 @@ textarea:focus {
     box-shadow: 0 0 0 3px rgba(123,191,174,0.2);
 }
 
-/* ================= CARDS ================= */
+/* ===== BUTTONS ===== */
+button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #7bbfae, #6aa997);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
 
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+/* ===== CARDS ===== */
 .card {
     background: white;
     padding: 25px;
@@ -84,27 +164,41 @@ textarea:focus {
     transition: 0.3s ease;
     white-space: pre-line;
 }
-#aiBox {
-    border-left: 4px solid #7bbfae;
-}
-.dark-mode #aiBox {
-    border-left: 4px solid #6aa997;
-}
 
 .card:hover {
     transform: translateY(-3px);
 }
 
-/* ================= DARK MODE ================= */
+/* ===== SECTIONS ===== */
+.section {
+    display: block;
+}
 
+.hidden {
+    display: none;
+}
+
+/* ===== MOOD BADGES ===== */
+.mood-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.mood-joy { background: #ffeaa7; color: #2d3436; }
+.mood-sadness { background: #a8e6cf; color: #2d3436; }
+.mood-anger { background: #ffb8b8; color: #2d3436; }
+.mood-fear { background: #dcd6f7; color: #2d3436; }
+.mood-neutral { background: #dfe6e9; color: #2d3436; }
+.mood-surprise { background: #ffe0b5; color: #2d3436; }
+.mood-disgust { background: #c8d6e5; color: #2d3436; }
+
+/* ===== DARK MODE ===== */
 .dark-mode {
     background: radial-gradient(circle at top left, #1f2a2a, #111616);
     color: #e4f0ed;
-}
-
-.dark-mode .navbar {
-    background: rgba(25,35,35,0.6);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .dark-mode button {
@@ -126,62 +220,327 @@ textarea:focus {
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
-.dark-mode h1,
-.dark-mode h2 {
+.dark-mode .mood-joy,
+.dark-mode .mood-sadness,
+.dark-mode .mood-anger,
+.dark-mode .mood-fear,
+.dark-mode .mood-neutral,
+.dark-mode .mood-surprise,
+.dark-mode .mood-disgust {
+    color: #2d3436;
+}
+
+/* ===== CALENDAR ===== */
+#calendar {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    margin-top: 20px;
+}
+
+.dark-mode #calendar {
+    background: #1c2626;
     color: #e4f0ed;
 }
 
-#analysis-section {
-    display: none;
+.fc-event {
+    cursor: pointer;
+}
+
+/* ===== CHARTS ===== */
+canvas {
+    max-height: 400px;
+    margin: 20px 0;
+    background: white;
+    padding: 15px;
+    border-radius: 25px;
+}
+
+.dark-mode canvas {
+    background: #1c2626;
+}
+
+/* ===== MOOD INPUT SECTION ===== */
+.mood-input-section {
+    margin-bottom: 30px;
+}
+
+.mood-result {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.confidence-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: #7bbfae;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.dark-mode .confidence-bar {
+    background: #2e3c3c;
 }
 </style>
-
 </head>
 
 <body>
 
-<div class="navbar">
-    <h2>🌿 Calm Journal</h2>
-    <div>
-        <button onclick="showDashboard()">Dashboard</button>
-        <button onclick="showAnalysis()">Analysis</button>
-        <button id="themeToggle">🌙</button>
-    </div>
+<!-- Main Header - Clickable HAPPYVERSE Home Button -->
+<div class="main-header" onclick="goToHome()">
+    <span>HAPPYVERSE</span>
+</div>
+
+<!-- Calm Journal Subtitle -->
+<div class="subtitle">
+    <span>Calm Journal</span>
 </div>
 
 <div class="container">
 
-<div id="dashboard-section">
-<h1>How are you feeling?</h1>
-<textarea id="note"></textarea>
-<br><br>
-<button onclick="saveMood()">Save</button>
+<!-- Mood Input Section -->
+<div class="mood-input-section">
+    <textarea id="note" placeholder="How are you feeling? Write your thoughts here..."></textarea>
+    
+    <div class="button-group">
+        <button onclick="saveMood()">Save Entry</button>
+        <button onclick="showDashboard()">Dashboard</button>
+        <button onclick="showAnalysis()">Analysis</button>
+        <button id="themeToggle">🌙</button>
+    </div>
 
-<h2>🤖 AI Insight</h2>
-<div id="aiBox" class="card"></div>
-
-<h2>🪞 Reflection</h2>
-<div id="reflectionBox" class="card"></div>
+    <div id="moodResult" class="mood-result" style="display: none;">
+        <span id="detectedMood" class="mood-badge"></span>
+        <div class="confidence-bar">
+            <div id="confidenceFill" class="confidence-fill" style="width: 0%"></div>
+        </div>
+    </div>
 </div>
 
-<div id="analysis-section">
-<h1>📊 Analysis</h1>
-
-<h2>Monthly Comparison</h2>
-<div id="monthlyComparison" class="card"></div>
-
-<h2>Mood Distribution</h2>
-<canvas id="moodChart"></canvas>
-
-<h2>Mood Trend</h2>
-<canvas id="trendChart"></canvas>
-
-<h2>Calendar</h2>
-<div id="calendar"></div>
-
-</div>
+<!-- Dashboard Section -->
+<div id="dashboard-section" class="section">
+    <h2>🪞 Reflection</h2>
+    <div id="reflectionBox" class="card">Loading reflection...</div>
+    
+    <h2>📝 Recent Entries</h2>
+    <div id="recentEntries" class="card">Loading entries...</div>
 </div>
 
-<script src="/static/script.js"></script>
+<!-- Analysis Section -->
+<div id="analysis-section" class="section hidden">
+    <h2>📊 Monthly Comparison</h2>
+    <div id="monthlyComparison" class="card">Loading...</div>
+
+    <h2>📈 Mood Distribution</h2>
+    <canvas id="moodChart"></canvas>
+
+    <h2>📉 Mood Trend</h2>
+    <canvas id="trendChart"></canvas>
+
+    <h2>📅 Calendar</h2>
+    <div id="calendar"></div>
+</div>
+
+</div>
+
+<script>
+// ===== HOME NAVIGATION - Update this with your actual home page URL =====
+function goToHome() {
+    // === REPLACE THIS LINK WITH YOUR ACTUAL HOME PAGE URL ===
+    // Sample links for testing:
+    // window.location.href = "https://google.com";  // For testing
+    // window.location.href = "/";  // If home is root of same domain
+    // window.location.href = "https://happyverse.com";  // Your actual home page
+    
+    window.location.href = "https://happy-verse-calm-journal.onrender.com";  // Current Render app
+    
+    console.log("Navigating to home page");
+}
+
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+
+// Navigation
+function showDashboard() {
+    document.getElementById('dashboard-section').classList.remove('hidden');
+    document.getElementById('analysis-section').classList.add('hidden');
+    loadDashboard();
+}
+
+function showAnalysis() {
+    document.getElementById('dashboard-section').classList.add('hidden');
+    document.getElementById('analysis-section').classList.remove('hidden');
+    loadAnalysis();
+}
+
+// Save Mood
+async function saveMood() {
+    const note = document.getElementById('note').value.trim();
+    if (!note) {
+        alert('Please write something');
+        return;
+    }
+
+    try {
+        const response = await fetch('/add_mood', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({note})
+        });
+
+        const data = await response.json();
+        
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        // Show mood result
+        const moodResult = document.getElementById('moodResult');
+        const detectedMood = document.getElementById('detectedMood');
+        const confidenceFill = document.getElementById('confidenceFill');
+        
+        detectedMood.textContent = data.mood;
+        detectedMood.className = `mood-badge mood-${data.mood}`;
+        confidenceFill.style.width = `${data.confidence * 100}%`;
+        moodResult.style.display = 'flex';
+        
+        // Clear textarea
+        document.getElementById('note').value = '';
+        
+        // Refresh dashboard
+        loadDashboard();
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to save mood');
+    }
+}
+
+// Load Dashboard
+async function loadDashboard() {
+    try {
+        // Load reflection
+        const reflectionRes = await fetch('/reflection_prompt');
+        const reflectionData = await reflectionRes.json();
+        document.getElementById('reflectionBox').textContent = reflectionData.prompt;
+        
+        // Load recent entries
+        const entriesRes = await fetch('/get_moods');
+        const entries = await entriesRes.json();
+        
+        if (entries.length === 0) {
+            document.getElementById('recentEntries').innerHTML = 'No entries yet. Start writing above!';
+            return;
+        }
+        
+        const recentHTML = entries.slice(-5).reverse().map(entry => `
+            <div style="margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #eee;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span class="mood-badge mood-${entry.mood}">${entry.mood}</span>
+                    <small>${entry.date}</small>
+                </div>
+                <p style="margin: 0;">${entry.note}</p>
+            </div>
+        `).join('');
+        
+        document.getElementById('recentEntries').innerHTML = recentHTML;
+        
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+    }
+}
+
+// Load Analysis
+async function loadAnalysis() {
+    try {
+        // Load monthly comparison
+        const comparisonRes = await fetch('/monthly_comparison');
+        const comparison = await comparisonRes.json();
+        
+        document.getElementById('monthlyComparison').innerHTML = `
+            <p><strong>Current week avg:</strong> ${comparison.current} / 5</p>
+            <p><strong>Overall avg:</strong> ${comparison.previous} / 5</p>
+            <p><strong>Change:</strong> ${comparison.change > 0 ? '+' : ''}${comparison.change}</p>
+        `;
+        
+        // Load moods for charts
+        const moodsRes = await fetch('/get_moods');
+        const moods = await moodsRes.json();
+        
+        if (moods.length === 0) return;
+        
+        // Mood distribution chart
+        const moodCounts = {};
+        moods.forEach(m => {
+            moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1;
+        });
+        
+        new Chart(document.getElementById('moodChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(moodCounts),
+                datasets: [{
+                    data: Object.values(moodCounts),
+                    backgroundColor: ['#ffeaa7', '#a8e6cf', '#ffb8b8', '#dcd6f7', '#dfe6e9', '#ffe0b5', '#c8d6e5']
+                }]
+            }
+        });
+        
+        // Mood trend chart
+        const scoreMap = {joy:5, surprise:4, neutral:3, fear:2, sadness:1.5, anger:1, disgust:1};
+        const scores = moods.map(m => scoreMap[m.mood] || 3);
+        
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: moods.map(m => m.date),
+                datasets: [{
+                    label: 'Mood Score',
+                    data: scores,
+                    borderColor: '#7bbfae',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: { y: { min: 0, max: 5 } }
+            }
+        });
+        
+        // Calendar
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: moods.map(m => ({
+                title: m.mood,
+                date: m.date,
+                color: '#7bbfae'
+            }))
+        });
+        calendar.render();
+        
+    } catch (error) {
+        console.error('Error loading analysis:', error);
+    }
+}
+
+// Initial load
+loadDashboard();
+</script>
+
 </body>
 </html>

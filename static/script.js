@@ -2,6 +2,12 @@ let moodChartInstance = null;
 let trendChartInstance = null;
 let calendarInstance = null;
 
+// ================= HOME NAVIGATION =================
+function goToHome() {
+    // Update this with your actual home page URL
+    window.location.href = "https://happy-verse-calm-journal.onrender.com";
+}
+
 // ================= SECTION SWITCHING =================
 
 function showDashboard() {
@@ -27,20 +33,26 @@ function saveMood() {
         body: JSON.stringify({ note })
     })
     .then(res => res.json())
-    .then(() => {
-        loadAI();
+    .then(data => {
+        // Show mood result if you have that element
+        const moodResult = document.getElementById('moodResult');
+        const detectedMood = document.getElementById('detectedMood');
+        const confidenceFill = document.getElementById('confidenceFill');
+        
+        if (moodResult && detectedMood && confidenceFill) {
+            detectedMood.textContent = data.mood;
+            detectedMood.className = `mood-badge mood-${data.mood}`;
+            confidenceFill.style.width = `${data.confidence * 100}%`;
+            moodResult.style.display = 'flex';
+        }
+        
+        // Load only reflection (AI is removed)
         loadReflection();
         document.getElementById("note").value = "";
-    });
-}
-
-// ================= AI =================
-
-function loadAI() {
-    fetch("/ai_suggestion")
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById("aiBox").innerText = data.suggestion;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to save mood');
     });
 }
 
@@ -51,6 +63,10 @@ function loadReflection() {
     .then(res => res.json())
     .then(data => {
         document.getElementById("reflectionBox").innerText = data.prompt;
+    })
+    .catch(error => {
+        console.error('Error loading reflection:', error);
+        document.getElementById("reflectionBox").innerText = "Take a moment to reflect on your feelings.";
     });
 }
 
@@ -60,9 +76,12 @@ function loadAnalysis() {
     fetch("/get_moods")
     .then(res => res.json())
     .then(data => {
-        renderCharts(data);
-        renderCalendar(data);
-    });
+        if (data.length > 0) {
+            renderCharts(data);
+            renderCalendar(data);
+        }
+    })
+    .catch(error => console.error('Error loading moods:', error));
 
     fetch("/monthly_comparison")
     .then(res => res.json())
@@ -71,7 +90,8 @@ function loadAnalysis() {
             "Recent Avg: " + data.current +
             "<br>Overall Avg: " + data.previous +
             "<br>Change: " + data.change;
-    });
+    })
+    .catch(error => console.error('Error loading comparison:', error));
 }
 
 // ================= CHARTS =================
@@ -169,5 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.classList.add("dark-mode");
     }
 
+    // Load initial data
+    loadReflection();
     showDashboard();
 });
