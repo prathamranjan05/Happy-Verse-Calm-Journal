@@ -9,11 +9,31 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <style>
-body {
+:root {
+    --primary: #7bbfae;
+    --primary-soft: #cfe8e1;
+    --accent: #f5d6c6;
+
+    --bg-light: #f4f9f8;
+    --card-light: #ffffff;
+
+    --bg-dark: #1b1f1f;
+    --card-dark: #262b2b;
+}
+
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #eaf6f3, #fdf6f0);
     transition: all 0.4s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ===== MAIN HEADER - Clickable Home Button ===== */
@@ -28,6 +48,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
+    width: 100%;
 }
 
 .main-header:hover {
@@ -39,6 +60,9 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 2px;
 }
 
 .main-header span::after {
@@ -77,15 +101,16 @@ body {
 /* ===== CALM JOURNAL SUBTITLE ===== */
 .subtitle {
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 600;
     color: #2c3e50;
-    margin: 30px 0 10px 0;
+    margin: 40px 0 20px 0;
     letter-spacing: 0.5px;
+    width: 100%;
 }
 
 .subtitle span {
-    background: linear-gradient(135deg, #7bbfae, #6aa997);
+    background: linear-gradient(135deg, var(--primary), #6aa997);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -97,17 +122,19 @@ body {
 }
 
 .dark-mode .subtitle span {
-    background: linear-gradient(135deg, #a8e6cf, #7bbfae);
+    background: linear-gradient(135deg, #a8e6cf, var(--primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-/* ===== CONTAINER ===== */
+/* ===== CONTAINER - Full width with max-width for content ===== */
 .container {
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px 40px 20px;
+    padding: 0 30px 40px 30px;
+    flex: 1;
 }
 
 /* ===== TEXTAREA ===== */
@@ -125,21 +152,22 @@ textarea {
 
 textarea:focus {
     outline: none;
-    border-color: #7bbfae;
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(123,191,174,0.2);
 }
 
 /* ===== BUTTONS ===== */
 button {
-    padding: 8px 18px;
+    padding: 10px 22px;
     border: none;
     border-radius: 25px;
-    background: linear-gradient(135deg, #7bbfae, #6aa997);
+    background: linear-gradient(135deg, var(--primary), #6aa997);
     color: white;
     font-weight: 500;
     cursor: pointer;
     transition: 0.3s ease;
     font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
 }
 
 button:hover {
@@ -149,14 +177,14 @@ button:hover {
 
 .button-group {
     display: flex;
-    gap: 12px;
-    margin: 20px 0;
+    gap: 15px;
+    margin: 25px 0;
     flex-wrap: wrap;
 }
 
 /* ===== CARDS ===== */
 .card {
-    background: white;
+    background: var(--card-light);
     padding: 25px;
     border-radius: 25px;
     margin-top: 20px;
@@ -172,6 +200,7 @@ button:hover {
 /* ===== SECTIONS ===== */
 .section {
     display: block;
+    width: 100%;
 }
 
 .hidden {
@@ -181,10 +210,11 @@ button:hover {
 /* ===== MOOD BADGES ===== */
 .mood-badge {
     display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
+    padding: 6px 16px;
+    border-radius: 25px;
     font-size: 14px;
     font-weight: 500;
+    text-transform: capitalize;
 }
 
 .mood-joy { background: #ffeaa7; color: #2d3436; }
@@ -197,7 +227,7 @@ button:hover {
 
 /* ===== DARK MODE ===== */
 .dark-mode {
-    background: radial-gradient(circle at top left, #1f2a2a, #111616);
+    background: var(--bg-dark);
     color: #e4f0ed;
 }
 
@@ -206,8 +236,8 @@ button:hover {
 }
 
 .dark-mode textarea {
-    background: #1f2a2a;
-    border: 1px solid #2e3c3c;
+    background: #2e3333;
+    border: 1px solid #444;
     color: #e4f0ed;
 }
 
@@ -216,7 +246,7 @@ button:hover {
 }
 
 .dark-mode .card {
-    background: linear-gradient(145deg, #1c2626, #162020);
+    background: var(--card-dark);
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
@@ -232,14 +262,15 @@ button:hover {
 
 /* ===== CALENDAR ===== */
 #calendar {
-    background: white;
-    padding: 20px;
+    background: var(--card-light);
+    padding: 25px;
     border-radius: 25px;
-    margin-top: 20px;
+    margin-top: 30px;
+    width: 100%;
 }
 
 .dark-mode #calendar {
-    background: #1c2626;
+    background: var(--card-dark);
     color: #e4f0ed;
 }
 
@@ -250,27 +281,30 @@ button:hover {
 /* ===== CHARTS ===== */
 canvas {
     max-height: 400px;
-    margin: 20px 0;
-    background: white;
-    padding: 15px;
+    margin: 30px 0;
+    background: var(--card-light);
+    padding: 20px;
     border-radius: 25px;
+    width: 100% !important;
 }
 
 .dark-mode canvas {
-    background: #1c2626;
+    background: var(--card-dark);
 }
 
 /* ===== MOOD INPUT SECTION ===== */
 .mood-input-section {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    width: 100%;
 }
 
 .mood-result {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-top: 15px;
+    gap: 20px;
+    margin-top: 20px;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .confidence-bar {
@@ -279,17 +313,239 @@ canvas {
     border-radius: 4px;
     flex: 1;
     overflow: hidden;
+    min-width: 200px;
 }
 
 .confidence-fill {
     height: 100%;
-    background: #7bbfae;
+    background: var(--primary);
     border-radius: 4px;
     transition: width 0.3s ease;
 }
 
 .dark-mode .confidence-bar {
     background: #2e3c3c;
+}
+
+/* ===== FOOTER STYLES ===== */
+.dashboard-footer {
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    background: #2c3e50;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 100;
+    width: 100%;
+    margin-top: auto;
+}
+
+.dark-mode .dashboard-footer {
+    background: #1a2626;
+    border-top: 1px solid rgba(100, 200, 255, 0.15);
+}
+
+.dashboard-footer p {
+    margin: 10px 0;
+    font-size: 1rem;
+}
+
+.dashboard-footer .made-with {
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.dashboard-footer .made-with span {
+    color: #ff6b9d;
+    animation: pulse 2s infinite;
+    display: inline-block;
+}
+
+.team-credits {
+    margin: 20px auto;
+    font-size: 1.1rem;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px 25px;
+    color: #a8e6cf;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 20px 0;
+    max-width: 1000px;
+}
+
+.dark-mode .team-credits {
+    color: #a8e6cf;
+    border-color: rgba(100, 200, 255, 0.2);
+}
+
+.team-credits span {
+    padding: 0 8px;
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative;
+    color: #a8e6cf;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.team-credits span:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
+}
+
+.team-credits span::after {
+    content: '•';
+    position: absolute;
+    right: -18px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.team-credits span:last-child::after {
+    display: none;
+}
+
+.copyright {
+    font-size: 0.9rem !important;
+    opacity: 0.6;
+    margin-top: 20px !important;
+    letter-spacing: 0.5px;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 25px 35px 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding: 0 20px;
+    }
+    
+    .main-header span {
+        font-size: 1.2rem;
+    }
+
+    .subtitle {
+        font-size: 1.8rem;
+        margin: 30px 0 15px 0;
+    }
+
+    .container {
+        padding: 0 20px 30px 20px;
+    }
+
+    .button-group {
+        gap: 10px;
+    }
+
+    button {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+    }
+
+    .team-credits {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px 0;
+        font-size: 1rem;
+    }
+
+    .team-credits span::after {
+        display: none;
+    }
+
+    .team-credits span {
+        display: block;
+        text-align: center;
+        padding: 3px 0;
+    }
+
+    .dashboard-footer {
+        padding: 2rem 1rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-header {
+        padding: 0 15px;
+    }
+
+    .main-header span {
+        font-size: 1rem;
+    }
+
+    .subtitle {
+        font-size: 1.5rem;
+        margin: 25px 0 10px 0;
+    }
+
+    .container {
+        padding: 0 15px 25px 15px;
+    }
+
+    textarea {
+        min-height: 120px;
+        padding: 15px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .mood-result {
+        gap: 12px;
+    }
+
+    .confidence-bar {
+        min-width: 150px;
+    }
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(123, 191, 174, 0.5);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(123, 191, 174, 0.8);
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: rgba(100, 200, 255, 0.3);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 200, 255, 0.5);
 }
 </style>
 </head>
@@ -353,17 +609,24 @@ canvas {
 
 </div>
 
+<!-- Footer with Team Credits -->
+<footer class="dashboard-footer">
+    <p class="made-with">Made with <span>💜</span> by</p>
+    <div class="team-credits">
+        <span>Pratham Ranjan</span>
+        <span>Chirag Agarwal</span>
+        <span>Ishani Jindal</span>
+        <span>Mehar Bhanwra</span>
+        <span>Aditi Mehta</span>
+    </div>
+    <p class="copyright">&copy; 2026 HappyVerse. All rights reserved.</p>
+</footer>
+
 <script>
 // ===== HOME NAVIGATION - Update this with your actual home page URL =====
 function goToHome() {
     // === REPLACE THIS LINK WITH YOUR ACTUAL HOME PAGE URL ===
-    // Sample links for testing:
-    // window.location.href = "https://google.com";  // For testing
-    // window.location.href = "/";  // If home is root of same domain
-    // window.location.href = "https://happyverse.com";  // Your actual home page
-    
-    window.location.href = "https://happy-verse-calm-journal.onrender.com";  // Current Render app
-    
+    window.location.href = "https://happyverse-calmzone.vercel.app";  
     console.log("Navigating to home page");
 }
 
@@ -484,13 +747,17 @@ async function loadAnalysis() {
         
         if (moods.length === 0) return;
         
+        // Clear previous charts
+        const moodChartCanvas = document.getElementById('moodChart');
+        const trendChartCanvas = document.getElementById('trendChart');
+        
         // Mood distribution chart
         const moodCounts = {};
         moods.forEach(m => {
             moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1;
         });
         
-        new Chart(document.getElementById('moodChart'), {
+        new Chart(moodChartCanvas, {
             type: 'doughnut',
             data: {
                 labels: Object.keys(moodCounts),
@@ -505,7 +772,7 @@ async function loadAnalysis() {
         const scoreMap = {joy:5, surprise:4, neutral:3, fear:2, sadness:1.5, anger:1, disgust:1};
         const scores = moods.map(m => scoreMap[m.mood] || 3);
         
-        new Chart(document.getElementById('trendChart'), {
+        new Chart(trendChartCanvas, {
             type: 'line',
             data: {
                 labels: moods.map(m => m.date),
@@ -523,6 +790,7 @@ async function loadAnalysis() {
         
         // Calendar
         const calendarEl = document.getElementById('calendar');
+        calendarEl.innerHTML = ''; // Clear previous calendar
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             events: moods.map(m => ({
